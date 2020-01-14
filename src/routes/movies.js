@@ -1,19 +1,31 @@
 const { Router } = require('express');
 const router = Router();
 const _ = require('underscore');
+const mongo = require('mongoose');
 const movies = require('../sample.json');
 
+mongo.connect('mongodb://localhost:27017/test', { useNewUrlParser: true });
+const movieModel = mongo.model('Movie', { title: String, director: String, year: String, rating: String, id:String})
+
 router.get("/", (req, res) => {
-    res.json(movies);
+    const movieArray = [];
+    const movieList = movieModel.find({"title": "David Marcano"});
+    /*
+    _.each(movieList, (movie, index) => {
+        movieArray.push(movie);
+    }); */
+    console.log(movieList);
+    res.send(movieList);
 });
 
 router.post("/", (req, res) => {
     const { title, director, year, rating } = req.body;
     if(title && director && year && rating) {
         const id = movies.length + 1;
-        const newMovie = { ...req.body, id};
+        const newMovie = new movieModel({ ...req.body, id});
         console.log(newMovie);
-        movies.push(newMovie);
+        newMovie.save().then(() => console.log("Guardado!"));
+        res.json(newMovie);
     } else {
         res.send("Datos incorrectos");
     }
