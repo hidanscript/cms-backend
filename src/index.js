@@ -17,6 +17,7 @@ app.use(cors());
 app.use(require('./routes/index'));
 app.use("/api/movies" , require('./routes/movies'));
 app.use("/api/users" , require('./routes/users'));
+app.use("/api/posts", require('./routes/posts'));
 
 app.listen(app.get('port'), () => {
     console.log(`Server on port: ${app.get('port')}`);

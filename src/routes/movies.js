@@ -4,18 +4,12 @@ const _ = require('underscore');
 const mongo = require('mongoose');
 const movies = require('../sample.json');
 
-mongo.connect('mongodb://localhost:27017/test', { useNewUrlParser: true });
+mongo.connect('mongodb://localhost:27017/test', { useUnifiedTopology: true , useNewUrlParser: true });
 const movieModel = mongo.model('Movie', { title: String, director: String, year: String, rating: String, id:String})
 
-router.get("/", (req, res) => {
-    const movieArray = [];
-    const movieList = movieModel.find({"title": "David Marcano"});
-    /*
-    _.each(movieList, (movie, index) => {
-        movieArray.push(movie);
-    }); */
-    console.log(movieList);
-    res.send(movieList);
+router.get("/", async (req, res) => {
+    const movieList = await movieModel.find({});
+    res.json(movieList);
 });
 
 router.post("/", (req, res) => {
